@@ -1,0 +1,88 @@
+const path = require('path');
+const {merge} = require('webpack-merge');
+const webpack = require('webpack');
+
+module.exports = (env, args) => {
+    const commonSettings = {
+        context: path.resolve(__dirname),
+        entry: {
+            receipt: "./ts/receipt.tsx",
+            shop: "./ts/shop.tsx",
+            cartpage: "./ts/cartpage.tsx",
+            cart: "./ts/cart.ts",
+            category: "./ts/category.ts",
+            register: "./ts/register.ts",
+            register2: "./ts/register2.tsx",
+            product: "./ts/product.ts",
+            history: "./ts/history.tsx",
+            member: "./ts/member.tsx",
+            statistics: "./ts/statistics.ts",
+            quiz: "./ts/quiz.tsx",
+            licenses: "./ts/licenses.tsx",
+            courses: "./ts/courses.tsx",
+        },
+        
+        output:
+            {
+                filename: "[name].js",
+                publicPath: "/static/js/",
+                path: path.resolve(__dirname, "static/js"),
+            },
+        
+        module: {
+            rules: [
+                {
+                    test: /\.(ts|tsx)$/,
+                    exclude: /node_modules/,
+                    use: ['ts-loader'],
+                },
+            ]
+        },
+        
+        resolve: {
+            extensions: ['*', '.ts', '.tsx', '.js'],
+            alias: {
+                "react": "preact/compat",
+                "react-dom": "preact/compat"
+            }
+        },
+        
+        plugins: [
+        ],
+    };
+    
+    if (args.mode === 'development') {
+        console.info("webpack development mode");
+        
+        return merge(commonSettings, {
+            mode: "development",
+            devtool: "inline-source-map",
+            plugins: [
+            ],
+            devServer: {
+                host: "0.0.0.0",
+                allowedHosts: "all",
+                port: 80,
+                static: '/static/js',
+                proxy: {
+                    '/': 'http://localhost:81',
+                    '/member': 'http://localhost:81',
+                    '/shop': 'http://localhost:81',
+                }
+            },
+        });
+    }
+    
+    console.info("webpack production mode");
+    
+    return merge(commonSettings, {
+        mode: "production",
+        devtool: "source-map",
+        plugins: [
+            new webpack.LoaderOptionsPlugin({
+                minimize: true,
+            }),
+        ],
+    });
+};
+

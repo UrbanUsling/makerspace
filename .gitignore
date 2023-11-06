@@ -1,0 +1,19 @@
+.env
+logs
+__pycache__/
+.idea
+.envrc
+.mypy_cache
+# For VIM temp files
+*.swp
+.webshop_product_images/
+node_modules
+.pytest_cache
+.test/selenium-screenshots
+.project
+.pydevproject
+.buildpath
+.settings
+public/dist
+public/static/js
+local.mk
